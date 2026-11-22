@@ -10,6 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://www.yohanesmar.io";
@@ -60,11 +61,29 @@ const SOCIAL = [
   ["LinkedIn", "https://www.linkedin.com/in/yohanesmarioaustralia/", ICON.linkedin],
   ["Instagram", "https://www.instagram.com/yohanesmar.io/", ICON.instagram],
 ];
+/* ---------- Structured data (schema.org JSON-LD) ---------- */
+const PERSON_ID = `${SITE}/#person`;
+const PERSON = {
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: "Yohanes Mario",
+  url: `${SITE}/`,
+  jobTitle: "Web Developer & Digital Specialist",
+  image: `${SITE}/assets/media/home/portrait.webp`,
+  sameAs: SOCIAL.map(([, u]) => u),
+};
+const PERSON_REF = { "@type": "Person", "@id": PERSON_ID, name: PERSON.name, url: PERSON.url };
+const crumbs = (items) => ({
+  "@type": "BreadcrumbList",
+  itemListElement: items.map(([name, url], i) => ({ "@type": "ListItem", position: i + 1, name, item: url })),
+});
+const ldScript = (graph) => `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`;
+
 const socialList = () => `<ul class="social">${SOCIAL.map(([n, u, i]) => `<li><a href="${u}" target="_blank" rel="noopener" aria-label="${n}">${i}</a></li>`).join("")}</ul>`;
 
 /* ---------- Projects ---------- */
 const PROJECTS = [
-  { slug: "ausev", short: "AUSEV", desc: "Website, lead generation and marketing collateral for AUSEV, an importer of premium electric commercial vehicles. A case study by Yohanes Mario.", label: "EV Manufacturing", name: "Australian EV", title: "AUSEV", card: "media/cards/ausev.jpg", hook: "How do you market the future when the future comes with a six-figure price tag?" },
+  { slug: "ausev", short: "AUSEV", desc: "Website, lead generation and marketing collateral for AUSEV, a premium electric vehicle company. A case study by Yohanes Mario.", label: "EV Manufacturing", name: "Australian EV", title: "AUSEV", card: "media/cards/ausev.jpg", hook: "How do you market the future when the future comes with a six-figure price tag?" },
   { slug: "advanced-manufacturing-queensland", short: "AMQ", desc: "A focused single-page website presenting Advanced Manufacturing Queensland’s defence and aerospace capabilities. A case study by Yohanes Mario.", label: "Defence Engineering", name: "Advanced Manufacturing Queensland", title: "Advanced Manufacturing Queensland", card: "media/cards/amq.jpg", hook: "Presenting complex capabilities with clarity for defence stakeholders." },
   { slug: "hydronics", short: "Hydronics", desc: "A customised Shopify store that sets Hydronics pressure washers apart through presentation, usability and video. A case study by Yohanes Mario.", label: "E-Commerce", name: "Hydronics", title: "Hydronics", card: "media/cards/hydronics.webp", hook: "When the product is a little dry, the customer experience becomes the differentiator." },
   { slug: "ausmv", short: "AUSMV", desc: "A digital showroom for AUSMV with inventory search, vehicle comparisons and an owners hub. A case study by Yohanes Mario.", label: "Truck Dealership", name: "AUSMV", title: "AUSMV", card: "media/cards/ausmv.jpg", hook: "Creating a digital showroom that supports the sales process." },
@@ -73,7 +92,7 @@ const PROJECTS = [
 ];
 
 /* ---------- Layout ---------- */
-function layout({ depth, slug, title, description, ogImage, ogAlt = "Yohanes Mario", body, current, section }) {
+function layout({ depth, slug, title, description, ogImage, ogAlt = "Yohanes Mario", body, current, section, jsonld }) {
   const r = depth ? "../" : "";
   const href = (p) => (p === "" ? (depth ? "../" : "./") : `${r}${p}/`);
   const nav = [["About", "about"], ["Portfolio", "portfolio"]];
@@ -100,12 +119,13 @@ function layout({ depth, slug, title, description, ogImage, ogAlt = "Yohanes Mar
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${SITE}/assets/${ogImage}">
 <meta name="theme-color" content="#f8f8f8">
-<link rel="icon" href="${r}assets/img/logo.png" type="image/png">
-<link rel="apple-touch-icon" href="${r}assets/img/logo.png">
+<link rel="icon" href="${r}favicon.ico" sizes="48x48">
+<link rel="icon" href="${r}assets/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="${r}assets/img/apple-touch-icon.png">
 <link rel="preload" href="${r}assets/fonts/poppins-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${r}assets/fonts/roboto-flex.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${r}assets/css/style.css">
-</head>
+${jsonld ? ldScript(jsonld) + "\n" : ""}</head>
 <body>
 <a class="skip-link" href="#content">Skip to content</a>
 
@@ -155,11 +175,11 @@ const img = (r, p, alt, extra = "") => `<img src="${r}assets/${p}" ${dims(p)} al
 
 const card = (r, href, p, { withText = true, eager = false } = {}) => `<a class="card" href="${href(p.slug)}">
       <img class="card__img" src="${r}assets/${p.card}" ${dims(p.card)} alt=""${eager ? "" : ' loading="lazy"'} decoding="async">
-      <span class="card__body">
+      <div class="card__body">
         <span class="card__label">${p.label}</span>
-        <span class="card__title">${p.name}</span>
+        <h2 class="card__title">${p.name}</h2>
         ${withText ? `<span class="card__text">${p.hook}</span>` : ""}
-      </span>
+      </div>
       ${withText ? '<span class="card__cta">Case Study <span aria-hidden="true">→</span></span>' : ""}
     </a>`;
 
@@ -326,9 +346,12 @@ const STUDIES = {
 };
 
 /* ---------- Pages ---------- */
+const CHANGED = new Set();
 function write(rel, html) {
   const file = path.join(OUT, rel);
   fs.mkdirSync(path.dirname(file), { recursive: true });
+  const old = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : null;
+  if (old !== html) CHANGED.add(rel);
   fs.writeFileSync(file, html);
   console.log("wrote", rel, html.length);
 }
@@ -339,6 +362,10 @@ write("index.html", layout({
   title: "Yohanes Mario | Web Developer & Digital Specialist",
   description: "Hi, I’m Yohanes. I build websites, software, and digital solutions that help businesses grow.",
   ogImage: "img/og/home.jpg",
+  jsonld: [
+    { "@type": "WebSite", "@id": `${SITE}/#website`, url: `${SITE}/`, name: "Yohanes Mario", inLanguage: "en-AU", publisher: { "@id": PERSON_ID } },
+    PERSON,
+  ],
   body: (r, href) => `
 <section class="hero">
   <div class="container">
@@ -366,6 +393,14 @@ write("portfolio/index.html", layout({
   title: "Portfolio | Yohanes Mario",
   description: "Some past projects: web design, development and digital marketing for EV manufacturing, defence engineering, e-commerce, automotive, search and certification brands.",
   ogImage: "img/og/home.jpg",
+  jsonld: [
+    {
+      "@type": "CollectionPage", url: `${SITE}/portfolio/`, name: "Portfolio", inLanguage: "en-AU",
+      author: PERSON_REF,
+      hasPart: PROJECTS.map((p) => ({ "@type": "CreativeWork", name: p.name, url: `${SITE}/${p.slug}/` })),
+    },
+    crumbs([["Home", `${SITE}/`], ["Portfolio", `${SITE}/portfolio/`]]),
+  ],
   body: (r, href) => `
 <div class="container page-head">
   <span class="page-head__eyebrow">Portfolio</span>
@@ -398,6 +433,10 @@ write("about/index.html", layout({
   title: "About | Yohanes Mario",
   description: "Just a guy with a keyboard. Web developer working across design, digital marketing, photography and video, based in Australia.",
   ogImage: "img/og/home.jpg",
+  jsonld: [
+    { "@type": "ProfilePage", url: `${SITE}/about/`, name: "About Yohanes Mario", inLanguage: "en-AU", mainEntity: PERSON },
+    crumbs([["Home", `${SITE}/`], ["About", `${SITE}/about/`]]),
+  ],
   body: () => `
 <div class="container page-head">
   <span class="page-head__eyebrow">About Me</span>
@@ -420,6 +459,22 @@ for (const p of PROJECTS) {
     title: `${p.title} Case Study | Yohanes Mario`,
     description: p.desc,
     ogImage: `img/og/${p.slug}.jpg`, ogAlt: `${p.title} case study`,
+    jsonld: [
+      {
+        "@type": "CreativeWork",
+        "@id": `${SITE}/${p.slug}/#work`,
+        url: `${SITE}/${p.slug}/`,
+        name: `${p.title} case study`,
+        headline: p.hook,
+        description: p.desc,
+        genre: p.label,
+        image: `${SITE}/assets/img/og/${p.slug}.jpg`,
+        inLanguage: "en-AU",
+        author: PERSON_REF,
+        keywords: [...s.did, ...s.tech].join(", "),
+      },
+      crumbs([["Home", `${SITE}/`], ["Portfolio", `${SITE}/portfolio/`], [p.title, `${SITE}/${p.slug}/`]]),
+    ],
     body: (r, href) => `
 <div class="container page-head">
   <span class="page-head__eyebrow">Case Study</span>
@@ -465,16 +520,19 @@ ${s.blocks.map((b) => b(r, href, p)).join("\n\n")}
   <p>The page you’re looking for doesn’t exist or has moved.</p>
   <a class="pill" href="/">Back to home <span class="arrow" aria-hidden="true">→</span></a>
 </div>`,
-  }).replace(/<link rel="canonical"[^>]*>\n/, '<meta name="robots" content="noindex">\n').replace(/(href|src)="assets\//g, '$1="/assets/').replace(/href="\.\/"/g, 'href="/"').replace(/href="(about|portfolio)\/"/g, 'href="/$1/"');
+  }).replace(/<link rel="canonical"[^>]*>\n/, '<meta name="robots" content="noindex">\n').replace(/(href|src)="assets\//g, '$1="/assets/').replace(/href="\.\/"/g, 'href="/"').replace(/href="(about|portfolio)\/"/g, 'href="/$1/"').replace('href="favicon.ico"', 'href="/favicon.ico"');
   write("404.html", html);
 }
 
 // sitemap.xml + robots.txt
 {
+  const today = new Date().toISOString().slice(0, 10);
+  const git = (...args) => { try { return execFileSync("git", args, { cwd: OUT, stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch { return ""; } };
+  const lastmod = (rel) => (CHANGED.has(rel) || git("status", "--porcelain", "--", rel) ? today : git("log", "-1", "--format=%cs", "--", rel) || today);
   const urls = ["", "about/", "portfolio/", ...PROJECTS.map((p) => p.slug + "/")];
   fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${SITE}/${u}</loc></url>`).join("\n")}
+${urls.map((u) => `  <url><loc>${SITE}/${u}</loc><lastmod>${lastmod(u + "index.html")}</lastmod></url>`).join("\n")}
 </urlset>
 `);
   fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
