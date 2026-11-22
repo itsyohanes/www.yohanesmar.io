@@ -51,6 +51,7 @@ const dims = (p) => {
 const ICON = {
   linkedin: '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>',
   instagram: '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>',
+  github: '<svg viewBox="-1.5 -1.5 19 19" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>',
   menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5h18v2.6H3zm0 5.7h18v2.6H3zm0 5.7h18V19H3z"/></svg>',
   close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
   zoom: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2z"/></svg>',
@@ -59,6 +60,7 @@ const ICON = {
 
 const SOCIAL = [
   ["LinkedIn", "https://www.linkedin.com/in/yohanesmarioaustralia/", ICON.linkedin],
+  ["GitHub", "https://github.com/itsyohanes", ICON.github],
   ["Instagram", "https://www.instagram.com/yohanesmar.io/", ICON.instagram],
 ];
 /* ---------- Structured data (schema.org JSON-LD) ---------- */
@@ -83,12 +85,12 @@ const socialList = () => `<ul class="social">${SOCIAL.map(([n, u, i]) => `<li><a
 
 /* ---------- Projects ---------- */
 const PROJECTS = [
-  { slug: "ausev", short: "AUSEV", desc: "Website, lead generation and marketing collateral for AUSEV, a premium electric vehicle company. A case study by Yohanes Mario.", label: "EV Manufacturing", name: "Australian EV", title: "AUSEV", card: "media/cards/ausev.jpg", hook: "How do you market the future when the future comes with a six-figure price tag?" },
+  { slug: "ausev", short: "AUSEV", desc: "Website, lead generation and marketing collateral for AUSEV, a premium electric vehicle company. A case study by Yohanes Mario.", label: "EV Manufacturing", name: "AUSEV", title: "AUSEV", card: "media/cards/ausev.jpg", hook: "How do you market the future when the future comes with a six-figure price tag?" },
   { slug: "advanced-manufacturing-queensland", short: "AMQ", desc: "A focused single-page website presenting Advanced Manufacturing Queensland’s defence and aerospace capabilities. A case study by Yohanes Mario.", label: "Defence Engineering", name: "Advanced Manufacturing Queensland", title: "Advanced Manufacturing Queensland", card: "media/cards/amq.jpg", hook: "Presenting complex capabilities with clarity for defence stakeholders." },
-  { slug: "hydronics", short: "Hydronics", desc: "A customised Shopify store that sets Hydronics pressure washers apart through presentation, usability and video. A case study by Yohanes Mario.", label: "E-Commerce", name: "Hydronics", title: "Hydronics", card: "media/cards/hydronics.webp", hook: "When the product is a little dry, the customer experience becomes the differentiator." },
+  { slug: "hydronics", short: "Hydronics", desc: "A customised Shopify store that sets Hydronics pressure washers apart through presentation, usability and video. A case study by Yohanes Mario.", label: "E-Commerce", name: "Hydronics", title: "Hydronics", card: "media/cards/hydronics.webp", hook: "In a category full of spec sheets, the customer experience becomes the differentiator." },
   { slug: "ausmv", short: "AUSMV", desc: "A digital showroom for AUSMV with inventory search, vehicle comparisons and an owners hub. A case study by Yohanes Mario.", label: "Truck Dealership", name: "AUSMV", title: "AUSMV", card: "media/cards/ausmv.jpg", hook: "Creating a digital showroom that supports the sales process." },
   { slug: "lookaroo", short: "Lookaroo", desc: "Design and development of Lookaroo, a privacy-first Australian search engine. A case study by Yohanes Mario.", label: "Web Search Engine", name: "Lookaroo", title: "Lookaroo", card: "media/cards/lookaroo.jpg", hook: "When you can’t topple an empire, build for the people it overlooks." },
-  { slug: "australian-owned", short: "Australian Owned", desc: "A Next.js and Strapi website helping businesses understand and apply for Australian Owned certification. A case study by Yohanes Mario.", label: "Business Certification", name: "Australian Owned", title: "Australian Owned", card: "media/cards/australian-owned.webp", hook: "Selling national pride while supporting local businesses." },
+  { slug: "australian-owned", short: "Australian Owned", desc: "A Next.js and Strapi website helping businesses understand and apply for Australian Owned certification. A case study by Yohanes Mario.", label: "Business Certification", name: "Australian Owned", title: "Australian Owned", card: "media/cards/australian-owned.webp", hook: "Helping local businesses show their Australian roots with pride." },
 ];
 
 /* ---------- Layout ---------- */
@@ -180,7 +182,7 @@ const card = (r, href, p, { withText = true, eager = false } = {}) => `<a class=
         <h2 class="card__title">${p.name}</h2>
         ${withText ? `<span class="card__text">${p.hook}</span>` : ""}
       </div>
-      ${withText ? '<span class="card__cta">Case Study <span aria-hidden="true">→</span></span>' : ""}
+      ${withText ? '<span class="card__cta pill pill--sm">Case Study <span class="arrow" aria-hidden="true">→</span></span>' : ""}
     </a>`;
 
 const shot = (r, p, caption, ctx = "") => `<button class="shot" type="button" data-lightbox="${r}assets/${p}" data-caption="${esc(caption)}">
@@ -505,7 +507,7 @@ for (const p of PROJECTS) {
 ${s.blocks.map((b) => b(r, href, p)).join("\n\n")}
 
 <div class="container cs-back">
-  <a class="pill" href="${href("portfolio")}"><span class="arrow" aria-hidden="true">←</span> Case Studies</a>
+  <a class="pill" href="${href("portfolio")}"><span class="arrow" aria-hidden="true">←</span> Back to portfolio</a>
 </div>`,
   }));
 }
@@ -522,7 +524,7 @@ ${s.blocks.map((b) => b(r, href, p)).join("\n\n")}
   <span class="page-head__eyebrow">404</span>
   <h1>Page not found</h1>
   <p>The page you’re looking for doesn’t exist or has moved.</p>
-  <a class="pill" href="/">Back to home <span class="arrow" aria-hidden="true">→</span></a>
+  <a class="pill" href="/"><span class="arrow" aria-hidden="true">←</span> Back to home</a>
 </div>`,
   }).replace(/<link rel="canonical"[^>]*>\n/, '<meta name="robots" content="noindex">\n').replace(/(href|src)="assets\//g, '$1="/assets/').replace(/href="\.\/"/g, 'href="/"').replace(/href="(about|portfolio)\/"/g, 'href="/$1/"').replace('href="favicon.ico"', 'href="/favicon.ico"');
   write("404.html", html);
