@@ -162,6 +162,19 @@ body.menu-open { overflow: hidden; }
 .hero__portrait { align-self: end; }
 .hero__portrait img { width: 450px; height: auto; }
 
+/* Scroll effects (driven by main.js; desktop only for the hero, as on the original site) */
+@media (min-width: 1025px) {
+  .js .hero {
+    position: sticky; top: var(--header-h); z-index: 0;
+    will-change: filter, opacity;
+    filter: blur(var(--hero-blur, 0px));
+    opacity: var(--hero-opacity, 1);
+  }
+}
+.js .work { position: relative; z-index: 1; }
+.js .card { opacity: var(--card-opacity, 1); }
+.site-footer { position: relative; z-index: 1; background: var(--bg); }
+
 /* --------------------------------------------------------------------------
    Project cards
    -------------------------------------------------------------------------- */

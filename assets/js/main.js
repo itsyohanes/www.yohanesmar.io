@@ -100,8 +100,52 @@
     if (boxOpen && e.key === "ArrowRight") show(index + 1);
   });
 
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Scroll effects (home) ----------
+     Hero: sticks under the header on desktop, blurring and fading as the
+     project cards scroll up over it. Cards: fade in as they enter the
+     viewport and fade out as they leave. */
+  const hero = document.querySelector(".hero");
+  const cards = [...document.querySelectorAll(".work .card")];
+
+  if (!reducedMotion && (hero || cards.length)) {
+    document.documentElement.classList.add("js");
+    const clamp = (n) => Math.min(1, Math.max(0, n));
+    const desktop = window.matchMedia("(min-width: 1025px)");
+    // Cheap enough (one hero + six cards) to run on every scroll event; opacity and
+    // filter changes don't trigger layout, so the rect reads stay fast.
+    const update = () => {
+      const vh = window.innerHeight;
+
+      if (hero) {
+        if (desktop.matches) {
+          const p = clamp(window.scrollY / (hero.offsetHeight * 0.6));
+          hero.style.setProperty("--hero-blur", (p * 15).toFixed(2) + "px");
+          hero.style.setProperty("--hero-opacity", (1 - p * 0.7).toFixed(3));
+        } else {
+          hero.style.removeProperty("--hero-blur");
+          hero.style.removeProperty("--hero-opacity");
+        }
+      }
+
+      for (const card of cards) {
+        const r = card.getBoundingClientRect();
+        // 0 when the card's top meets the bottom of the viewport, 1 when its bottom meets the top.
+        const t = (vh - r.top) / (vh + r.height);
+        const o = t < 0.2 ? t / 0.2 : t > 0.8 ? (1 - t) / 0.2 : 1;
+        card.style.setProperty("--card-opacity", clamp(o).toFixed(3));
+      }
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    window.addEventListener("load", update);
+    update();
+  }
+
   /* ---------- Respect reduced motion for autoplaying video ---------- */
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (reducedMotion) {
     document.querySelectorAll("video[autoplay]").forEach((v) => { v.pause(); v.controls = true; });
   }
 })();
