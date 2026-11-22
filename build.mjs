@@ -1,21 +1,21 @@
 // Page generator for the static site.
 //
 // Usage (from the repo root, Node 18+, no dependencies):
-//   node _dev/build.mjs
+//   node build.mjs
 //
 // It rewrites every page (index.html, about/, portfolio/, the six case
-// studies, 404.html) plus sitemap.xml and robots.txt in www.yohanesmar.io/
+// studies, 404.html) plus sitemap.xml and robots.txt in html/
 // from the content below. Edit content and shared markup HERE, then re-run;
 // hand edits to the generated HTML files are overwritten on the next build.
 //
-// Deploying: upload the CONTENTS of www.yohanesmar.io/ to public_html.
+// Deploying: upload the CONTENTS of html/ to public_html.
 // Nothing outside that folder goes on the server.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 
-const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "www.yohanesmar.io");
+const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "html");
 const SITE = "https://www.yohanesmar.io";
 const YEAR = new Date().getFullYear();
 
