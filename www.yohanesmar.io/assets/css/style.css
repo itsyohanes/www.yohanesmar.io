@@ -175,6 +175,20 @@ body.menu-open { overflow: hidden; }
 }
 .pill--sm { padding: 13px 26px; }
 .pill svg { transition: transform var(--dur) var(--ease); }
+
+/* Drawn border: a pink ring that sweeps round the button from its left edge on hover,
+   like the nav underline, and retracts on the way out. A conic gradient masked down to a
+   2px ring; --ring is registered so the browser can animate it. */
+@property --ring { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+.pill { position: relative; } /* .play-btn is already absolutely positioned */
+.pill::before, .play-btn::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2px; pointer-events: none;
+  background: conic-gradient(from 270deg, var(--pink) var(--ring), transparent 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: --ring .6s cubic-bezier(.65, 0, .35, 1); /* even ease-in-out so the trace reads */
+}
 .pill svg { width: 1.25em; height: 1.25em; flex: none; fill: currentColor; }
 /* Roboto Condensed capitals sit ~6% of the font size above the middle of their line box;
    lift icons beside uppercase text by the same amount so they centre on the letters */
@@ -408,10 +422,8 @@ body.menu-open { overflow: hidden; }
   .social a:hover svg { transform: translateY(-2px); }
   .menu nav a:hover { color: var(--pink); transform: translateX(6px); }
 
-  .pill:hover, .card:hover .pill {
-    background: var(--pink); color: var(--white);
-    box-shadow: var(--shadow-pink); transform: translateY(-2px);
-  }
+  .pill:hover, .card:hover .pill { box-shadow: var(--shadow-pink); transform: translateY(-2px); }
+  .pill:hover::before, .card:hover .pill::before, .play-btn:hover::before { --ring: 100%; }
   /* Arrows nudge the way they point */
   .pill:hover .icon-right, .card:hover .icon-right { transform: translateX(4px); }
   .pill:hover .icon-left { transform: translateX(-4px); }
@@ -425,17 +437,16 @@ body.menu-open { overflow: hidden; }
   .shot:hover .shot__frame img { transform: scale(1.04); }
   .shot:hover .shot__caption svg { fill: var(--pink); transform: scale(1.15); }
 
-  .play-btn:hover { transform: translate(-50%, -50%) scale(1.08); background: var(--pink); color: var(--white); }
+  .play-btn:hover { transform: translate(-50%, -50%) scale(1.08); }
   .lightbox button:hover { opacity: 1; scale: 1.12; }
 }
 
 /* Keyboard focus gets the same colour changes, without movement so the focus ring stays put */
 .nav nav a:focus-visible::after { transform: scaleX(1); }
 .social a:focus-visible { color: var(--pink); }
-.pill:focus-visible, .card:focus-visible .pill { background: var(--pink); color: var(--white); }
+.pill:focus-visible::before, .card:focus-visible .pill::before, .play-btn:focus-visible::before { --ring: 100%; }
 .card:focus-visible .card__img { filter: brightness(100%) saturate(100%) blur(0); }
 .shot:focus-visible .shot__caption svg { fill: var(--pink); }
-.play-btn:focus-visible { background: var(--pink); color: var(--white); }
 
 /* Press */
 .pill:active, .card:active .pill { transform: translateY(0) scale(.97); box-shadow: var(--shadow-sm); }
