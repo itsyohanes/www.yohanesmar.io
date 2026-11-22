@@ -4,16 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Australian Owned Case Study | Yohanes Mario</title>
-<meta name="description" content="Selling national pride while supporting local businesses. A business certification case study by Yohanes Mario.">
+<meta name="description" content="A Next.js and Strapi website helping businesses understand and apply for Australian Owned certification. A case study by Yohanes Mario.">
 <link rel="canonical" href="https://www.yohanesmar.io/australian-owned/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_AU">
 <meta property="og:site_name" content="Yohanes Mario">
 <meta property="og:title" content="Australian Owned Case Study | Yohanes Mario">
-<meta property="og:description" content="Selling national pride while supporting local businesses. A business certification case study by Yohanes Mario.">
+<meta property="og:description" content="A Next.js and Strapi website helping businesses understand and apply for Australian Owned certification. A case study by Yohanes Mario.">
 <meta property="og:url" content="https://www.yohanesmar.io/australian-owned/">
-<meta property="og:image" content="https://www.yohanesmar.io/assets/media/australian-owned/hero-poster.jpg">
+<meta property="og:image" content="https://www.yohanesmar.io/assets/img/og/australian-owned.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Australian Owned case study">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.yohanesmar.io/assets/img/og/australian-owned.jpg">
 <meta name="theme-color" content="#f8f8f8">
 <link rel="icon" href="../assets/img/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="../assets/img/logo.png">
@@ -28,7 +32,7 @@
   <div class="container">
     <a class="logo" href="../" aria-label="Yohanes Mario, home"><img src="../assets/img/logo.png" width="150" height="150" alt=""></a>
     <div class="nav">
-      <nav aria-label="Main"><ul><li><a href="../about/">About</a></li><li><a href="../portfolio/">Portfolio</a></li></ul></nav>
+      <nav aria-label="Main"><ul><li><a href="../about/">About</a></li><li><a href="../portfolio/" aria-current="true">Portfolio</a></li></ul></nav>
       <ul class="social"><li><a href="https://www.linkedin.com/in/yohanesmarioaustralia/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a></li><li><a href="https://www.instagram.com/yohanesmar.io/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a></li></ul>
     </div>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5h18v2.6H3zm0 5.7h18v2.6H3zm0 5.7h18V19H3z"/></svg></button>
@@ -43,7 +47,7 @@
   <nav aria-label="Menu"><ul>
     <li><a href="../">Home</a></li>
     <li><a href="../about/">About</a></li>
-    <li><a href="../portfolio/">Portfolio</a></li>
+    <li><a href="../portfolio/" aria-current="true">Portfolio</a></li>
   </ul></nav>
   <ul class="social"><li><a href="https://www.linkedin.com/in/yohanesmarioaustralia/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a></li><li><a href="https://www.instagram.com/yohanesmar.io/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a></li></ul>
   <p class="menu__copy">© 2026 Yohanes Mario</p>
@@ -65,9 +69,9 @@
 <section class="container cs-intro">
   <p class="cs-tagline">Selling national pride while supporting local businesses.</p>
   <div class="cs-meta">
-    <div><h3>What I Did</h3><ul><li>Web Design</li><li>Web Development</li><li>Graphic Design</li></ul></div>
-    <div><h3>What I Used</h3><ul><li>Adobe Illustrator</li><li>Visual Studio Code</li></ul></div>
-    <div><h3>Technologies & Platforms</h3><ul><li>Next.js</li><li>JavaScript</li><li>HTML/CSS</li><li>Strapi Headless CMS</li></ul></div>
+    <div><h2>What I Did</h2><ul><li>Web Design</li><li>Web Development</li><li>Graphic Design</li></ul></div>
+    <div><h2>What I Used</h2><ul><li>Adobe Illustrator</li><li>Visual Studio Code</li></ul></div>
+    <div><h2>Technologies</h2><ul><li>Next.js</li><li>JavaScript</li><li>HTML/CSS</li><li>Strapi Headless CMS</li></ul></div>
   </div>
 </section>
 
@@ -78,11 +82,11 @@
 
 <section class="cs-block container"><div class="gallery">
       <button class="shot" type="button" data-lightbox="../assets/media/australian-owned/account.jpg" data-caption="Account Management">
-        <span class="shot__frame"><img src="../assets/media/australian-owned/account.jpg" width="1189" height="716" alt="Account Management" loading="lazy" decoding="async"></span>
+        <span class="shot__frame"><img src="../assets/media/australian-owned/account.jpg" width="1189" height="716" alt="Australian Owned: Account Management" loading="lazy" decoding="async"></span>
         <span class="shot__caption">Account Management <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2z"/></svg></span>
       </button>
       <button class="shot" type="button" data-lightbox="../assets/media/australian-owned/login.jpg" data-caption="Authentication Page">
-        <span class="shot__frame"><img src="../assets/media/australian-owned/login.jpg" width="1189" height="716" alt="Authentication Page" loading="lazy" decoding="async"></span>
+        <span class="shot__frame"><img src="../assets/media/australian-owned/login.jpg" width="1189" height="716" alt="Australian Owned: Authentication Page" loading="lazy" decoding="async"></span>
         <span class="shot__caption">Authentication Page <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2z"/></svg></span>
       </button>
     </div></section>

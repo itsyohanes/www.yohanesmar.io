@@ -13,8 +13,11 @@ portfolio/index.html             Portfolio grid
 assets/css/style.css             All styles
 assets/js/main.js                Mobile menu + lightbox
 assets/fonts/                    Poppins, Roboto Condensed, Roboto Flex (self-hosted)
+404.html                         Not-found page (picked up by Netlify, GitHub Pages, Cloudflare Pages)
+sitemap.xml, robots.txt
 assets/img/                      Logos / favicon
-assets/media/<project>/          Images and video per page
+assets/img/og/                   1200×630 social share images, one per page
+assets/media/<project>/          Images (WebP/JPG) and video per page
 ```
 
 URLs match the old WordPress permalinks (`/about/`, `/ausev/`, …), so existing links keep working.
