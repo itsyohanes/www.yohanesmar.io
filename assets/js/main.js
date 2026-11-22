@@ -100,7 +100,17 @@
     if (boxOpen && e.key === "ArrowRight") show(index + 1);
   });
 
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* ---------- Click-to-play hero video ---------- */
+  document.querySelectorAll(".cs-hero--click").forEach((hero) => {
+    const video = hero.querySelector("video");
+    const button = hero.querySelector(".play-btn");
+    if (!video || !button) return;
+    // Focus moves to the video (the button disappears) without scrolling the page.
+    button.addEventListener("click", () => { video.play(); video.focus({ preventScroll: true }); });
+    video.addEventListener("play", () => hero.classList.add("is-playing"));
+  });
+
+  const reducedMotion =window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- Scroll effects (home) ----------
      Hero: sticks under the header on desktop, blurring and fading as the

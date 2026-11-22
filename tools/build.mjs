@@ -326,7 +326,8 @@ const STUDIES = {
     ],
   },
   "australian-owned": {
-    hero: { video: "media/australian-owned/hero.mp4", poster: "media/australian-owned/hero-poster.jpg" },
+    // 3-minute video with sound: don't autoplay; load only when the visitor presses play.
+    hero: { video: "media/australian-owned/hero.mp4", poster: "media/australian-owned/hero-poster.jpg", clickToPlay: true },
     did: ["Web Design", "Web Development", "Graphic Design"],
     used: ["Adobe Illustrator", "Visual Studio Code"],
     tech: ["Next.js", "JavaScript", "HTML/CSS", "Strapi Headless CMS"],
@@ -482,8 +483,11 @@ for (const p of PROJECTS) {
 </div>
 
 <div class="container">
-  <div class="cs-hero">
-    ${s.hero.video
+  <div class="cs-hero${s.hero.clickToPlay ? " cs-hero--click" : ""}">
+    ${s.hero.video && s.hero.clickToPlay
+      ? `<video src="${r}assets/${s.hero.video}" poster="${r}assets/${s.hero.poster}" preload="none" playsinline controls aria-label="${esc(p.title)} video"></video>
+    <button class="play-btn" type="button" aria-label="Play the ${esc(p.title)} video">${ICON.play}</button>`
+      : s.hero.video
       ? `<video src="${r}assets/${s.hero.video}" poster="${r}assets/${s.hero.poster}" autoplay muted loop playsinline controls aria-label="${esc(p.title)} showreel"></video>`
       : `<img src="${r}assets/${s.hero.image}" ${dims(s.hero.image)} alt="${esc(s.hero.alt)}" fetchpriority="high">`}
   </div>
