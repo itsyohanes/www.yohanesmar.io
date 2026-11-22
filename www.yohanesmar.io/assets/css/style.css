@@ -422,7 +422,7 @@ body.menu-open { overflow: hidden; }
   .social a:hover svg { transform: translateY(-2px); }
   .menu nav a:hover { color: var(--pink); transform: translateX(6px); }
 
-  .pill:hover, .card:hover .pill { box-shadow: var(--shadow-pink); transform: translateY(-2px); }
+  .pill:hover, .card:hover .pill { box-shadow: var(--shadow-pink); }
   .pill:hover::before, .card:hover .pill::before, .play-btn:hover::before { --ring: 100%; }
   /* Arrows nudge the way they point */
   .pill:hover .icon-right, .card:hover .icon-right { transform: translateX(4px); }
