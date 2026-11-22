@@ -1,18 +1,21 @@
 // Page generator for the static site.
 //
 // Usage (from the repo root, Node 18+, no dependencies):
-//   node tools/build.mjs
+//   node _dev/build.mjs
 //
 // It rewrites every page (index.html, about/, portfolio/, the six case
-// studies, 404.html) plus sitemap.xml and robots.txt from the content below.
-// Edit content and shared markup HERE, then re-run; hand edits to the
-// generated HTML files are overwritten on the next build.
+// studies, 404.html) plus sitemap.xml and robots.txt in www.yohanesmar.io/
+// from the content below. Edit content and shared markup HERE, then re-run;
+// hand edits to the generated HTML files are overwritten on the next build.
+//
+// Deploying: upload the CONTENTS of www.yohanesmar.io/ to public_html.
+// Nothing outside that folder goes on the server.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 
-const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "www.yohanesmar.io");
 const SITE = "https://www.yohanesmar.io";
 const YEAR = new Date().getFullYear();
 
@@ -49,13 +52,19 @@ const dims = (p) => {
 
 /* ---------- Icons ---------- */
 const ICON = {
-  linkedin: '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>',
+  linkedin: '<svg viewBox="0 -32 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>',
   instagram: '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>',
-  github: '<svg viewBox="-1.5 -1.5 19 19" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>',
+  github: '<svg viewBox="-1.5 -1.7 19 19" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>',
   menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5h18v2.6H3zm0 5.7h18v2.6H3zm0 5.7h18V19H3z"/></svg>',
   close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
-  zoom: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2z"/></svg>',
+  zoom: '<svg viewBox="0 -0.25 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2z"/></svg>',
   play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+  // Button arrows as SVG: the text arrows (→ ↓ ← ↗) aren't in Roboto Condensed, so they came
+  // from a fallback font and sat at a different height in each button.
+  right: '<svg class="icon-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>',
+  left: '<svg class="icon-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>',
+  down: '<svg class="icon-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>',
+  external: '<svg class="icon-external" viewBox="0 0.5 24 24" aria-hidden="true"><path d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"/></svg>',
 };
 
 const SOCIAL = [
@@ -91,6 +100,22 @@ const PROJECTS = [
   { slug: "ausmv", short: "AUSMV", desc: "A digital showroom for AUSMV with inventory search, vehicle comparisons and an owners hub. A case study by Yohanes Mario.", label: "Truck Dealership", name: "AUSMV", title: "AUSMV", card: "media/cards/ausmv.jpg", hook: "Creating a digital showroom that supports the sales process." },
   { slug: "lookaroo", short: "Lookaroo", desc: "Design and development of Lookaroo, a privacy-first Australian search engine. A case study by Yohanes Mario.", label: "Web Search Engine", name: "Lookaroo", title: "Lookaroo", card: "media/cards/lookaroo.jpg", hook: "When you can’t topple an empire, build for the people it overlooks." },
   { slug: "australian-owned", short: "Australian Owned", desc: "A Next.js and Strapi website helping businesses understand and apply for Australian Owned certification. A case study by Yohanes Mario.", label: "Business Certification", name: "Australian Owned", title: "Australian Owned", card: "media/cards/australian-owned.webp", hook: "Helping local businesses show their Australian roots with pride." },
+];
+
+/* ---------- Software (own products, shown on the home page) ---------- */
+const SOFTWARE = [
+  {
+    name: "DLSS Updater", label: "Graphics Utility", icon: "media/software/dlss-updater.svg",
+    text: "Finds the NVIDIA DLSS files across your installed software and updates them to the latest version, backing up the originals first. A 245 KB portable app in 14 languages.",
+    stack: "C# · .NET Framework · Open source",
+    site: "https://www.dlssupdater.com/", github: "https://github.com/itsyohanes/dlss-updater-dotnet",
+  },
+  {
+    name: "UnplugLock", label: "Laptop Security", icon: "media/software/unpluglock.png",
+    text: "A Windows tray app that locks your laptop the moment the charger is pulled, so if it’s snatched, it goes locked. 80 KB, no admin rights, no telemetry.",
+    stack: "C# · .NET Framework · Open source",
+    site: "https://unpluglock.com/", github: "https://github.com/itsyohanes/UnplugLock",
+  },
 ];
 
 /* ---------- Layout ---------- */
@@ -182,8 +207,22 @@ const card = (r, href, p, { withText = true, eager = false } = {}) => `<a class=
         <h2 class="card__title">${p.name}</h2>
         ${withText ? `<span class="card__text">${p.hook}</span>` : ""}
       </div>
-      ${withText ? '<span class="card__cta pill pill--sm">Case Study <span class="arrow" aria-hidden="true">→</span></span>' : ""}
+      ${withText ? `<span class="card__cta pill pill--sm">Case Study ${ICON.right}</span>` : ""}
     </a>`;
+
+const app = (r, s) => `<article class="app">
+      <div class="app__body">
+        <img class="app__icon" src="${r}assets/${s.icon}" width="64" height="64" alt="" loading="lazy" decoding="async">
+        <span class="app__label">${s.label}</span>
+        <h3 class="app__title">${s.name}</h3>
+        <p class="app__text">${s.text}</p>
+        <p class="app__stack">${s.stack}</p>
+        <div class="app__actions">
+          <a class="pill pill--sm" href="${s.site}" target="_blank" rel="noopener">Website<span class="visually-hidden">: ${s.name}</span> ${ICON.external}</a>
+          <a class="pill pill--sm" href="${s.github}" target="_blank" rel="noopener">${ICON.github} GitHub<span class="visually-hidden">: ${s.name}</span></a>
+        </div>
+      </div>
+    </article>`;
 
 const shot = (r, p, caption, ctx = "") => `<button class="shot" type="button" data-lightbox="${r}assets/${p}" data-caption="${esc(caption)}">
         <span class="shot__frame">${img(r, p, ctx ? `${ctx}: ${caption}` : caption)}</span>
@@ -368,6 +407,13 @@ write("index.html", layout({
   jsonld: [
     { "@type": "WebSite", "@id": `${SITE}/#website`, url: `${SITE}/`, name: "Yohanes Mario", inLanguage: "en-AU", publisher: { "@id": PERSON_ID } },
     PERSON,
+    ...SOFTWARE.map((s) => ({
+      "@type": "SoftwareApplication",
+      name: s.name, url: s.site, sameAs: [s.github], description: s.text,
+      applicationCategory: "UtilitiesApplication", operatingSystem: "Windows 10, Windows 11",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "AUD" },
+      author: PERSON_REF,
+    })),
   ],
   body: (r, href) => `
 <section class="hero">
@@ -375,7 +421,7 @@ write("index.html", layout({
     <div class="hero__copy">
       <h1>Developer &amp; Digital Specialist</h1>
       <p>Hi, I’m Yohanes. I build websites, software, and digital solutions that help businesses grow.</p>
-      <a class="pill" href="#mywork">See My Work <span class="arrow" aria-hidden="true">↓</span></a>
+      <a class="pill" href="#mywork">See My Work ${ICON.down}</a>
     </div>
     <div class="hero__portrait">
       <img src="${r}assets/media/home/portrait.webp" ${dims("media/home/portrait.webp")} alt="Yohanes Mario" fetchpriority="high">
@@ -386,6 +432,19 @@ write("index.html", layout({
 <section class="work" id="mywork" aria-label="Selected work">
   <div class="container work__list">
     ${PROJECTS.map((p, i) => card(r, href, p, { eager: i === 0 })).join("\n    ")}
+  </div>
+</section>
+
+<section class="software" id="software" aria-labelledby="software-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="page-head__eyebrow">Software</span>
+      <h2 class="section-head__title" id="software-title">Tools I’ve Built</h2>
+      <p>Small, free Windows apps I design, build and maintain in my own time.</p>
+    </div>
+    <div class="apps">
+    ${SOFTWARE.map((s) => app(r, s)).join("\n    ")}
+    </div>
   </div>
 </section>`,
 }));
@@ -417,7 +476,7 @@ write("portfolio/index.html", layout({
 // About
 const ABOUT = [
   ["How It Started", [
-    "My interest in web and digital began long before it became my career. From the age of 13, I was writing small programs in Basic, modifying video games, and creating personal projects, sparking an interest in technology and problem solving that has stayed with me ever since.",
+    "My interest in web and digital began long before it became my career. From the age of 13, I was writing small programs in Basic, tinkering with existing software, and creating personal projects, sparking an interest in technology and problem solving that has stayed with me ever since.",
     "After school, I naturally found my way into web development, where I discovered I enjoyed combining technical problem solving with creative design to build digital experiences that are both functional and engaging.",
   ]],
   ["A Broader Perspective", [
@@ -507,7 +566,7 @@ for (const p of PROJECTS) {
 ${s.blocks.map((b) => b(r, href, p)).join("\n\n")}
 
 <div class="container cs-back">
-  <a class="pill" href="${href("portfolio")}"><span class="arrow" aria-hidden="true">←</span> Back to portfolio</a>
+  <a class="pill" href="${href("portfolio")}">${ICON.left} Back to portfolio</a>
 </div>`,
   }));
 }
@@ -524,7 +583,7 @@ ${s.blocks.map((b) => b(r, href, p)).join("\n\n")}
   <span class="page-head__eyebrow">404</span>
   <h1>Page not found</h1>
   <p>The page you’re looking for doesn’t exist or has moved.</p>
-  <a class="pill" href="/"><span class="arrow" aria-hidden="true">←</span> Back to home</a>
+  <a class="pill" href="/">${ICON.left} Back to home</a>
 </div>`,
   }).replace(/<link rel="canonical"[^>]*>\n/, '<meta name="robots" content="noindex">\n').replace(/(href|src)="assets\//g, '$1="/assets/').replace(/href="\.\/"/g, 'href="/"').replace(/href="(about|portfolio)\/"/g, 'href="/$1/"').replace('href="favicon.ico"', 'href="/favicon.ico"');
   write("404.html", html);

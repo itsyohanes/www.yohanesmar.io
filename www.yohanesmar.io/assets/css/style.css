@@ -49,6 +49,13 @@
   --shadow-lg: 0 10px 23px 8px rgba(0, 0, 0, .25); /* project cards, play button */
   --shadow-md: 0 8px 20px rgba(0, 0, 0, .18);       /* case-study media */
   --shadow-sm: 0 5px 10px rgba(0, 0, 0, .15);       /* buttons */
+  --shadow-hover: 0 18px 36px 6px rgba(0, 0, 0, .3); /* lifted card */
+  --shadow-pink: 0 8px 18px rgba(204, 10, 138, .3); /* lifted button */
+
+  /* Motion */
+  --ease: cubic-bezier(.22, 1, .36, 1);              /* fast start, soft landing */
+  --dur: .3s;
+  --dur-slow: .7s;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -80,7 +87,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* One uppercase UI style: nav, buttons, labels, captions */
 .skip-link, .nav a, .menu nav a, .pill, .lightbox__caption,
-.page-head__eyebrow, .cs-meta h2, .shot__caption, .card__label {
+.page-head__eyebrow, .cs-meta h2, .shot__caption, .card__label, .app__label {
   font-family: var(--font-ui); font-weight: 500; text-transform: uppercase; letter-spacing: var(--tracking);
 }
 
@@ -104,18 +111,25 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .site-header .container { height: 100%; display: flex; align-items: center; justify-content: space-between; }
 
 .logo { display: block; width: var(--header-h); height: var(--header-h); flex: none; align-self: flex-start; }
-.logo img { width: 100%; height: 100%; }
+.logo img { width: 100%; height: 100%; transition: transform var(--dur) var(--ease); }
 
 .nav { display: flex; align-items: center; gap: 32px; }
 .nav nav ul { list-style: none; padding: 0; display: flex; gap: 32px; }
-.nav a { font-size: var(--ui-sm); color: var(--text); text-decoration: none; transition: color .3s; }
-.nav a:hover { color: var(--text-soft); }
-.nav a[aria-current] { color: var(--pink); }
+.nav nav a { position: relative; font-size: var(--ui-sm); color: var(--text); text-decoration: none; transition: color var(--dur) var(--ease); }
+/* Underline that draws in from the left; the current page keeps it */
+.nav nav a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px;
+  background: var(--pink); transform: scaleX(0); transform-origin: right;
+  transition: transform var(--dur) var(--ease);
+}
+.nav nav a[aria-current] { color: var(--pink); }
+.nav nav a[aria-current]::after { transform: scaleX(1); }
 
 .social { display: flex; list-style: none; padding: 0; margin-inline: -11px; }
-.social a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: var(--ink); transition: color .3s; }
-.social a:hover { color: var(--text-soft); }
+.social a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: var(--ink); transition: color var(--dur) var(--ease); }
+.social svg { transition: transform var(--dur) var(--ease); }
 .social svg { width: 22px; height: 22px; display: block; fill: currentColor; }
+.nav .social svg { translate: 0 .6px; } /* centre on the uppercase nav links beside them */
 
 .menu-toggle { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: var(--ink); }
 .menu-toggle svg { width: 36px; height: 36px; }
@@ -138,12 +152,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .menu__close svg { width: 22px; height: 22px; fill: currentColor; }
 .menu nav { margin-top: var(--s-2); }
 .menu nav ul { list-style: none; padding: 0; }
-.menu nav a { display: inline-block; padding: 4px 0; font-size: 1.5rem; color: var(--white); text-decoration: none; transition: color .3s; }
-.menu nav a:hover { color: var(--white-soft); }
+.menu nav a { display: inline-block; padding: 4px 0; font-size: 1.5rem; color: var(--white); text-decoration: none; transition: color var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .menu nav a[aria-current] { color: var(--pink); }
 .menu .social { margin-top: auto; }
 .menu .social a { color: var(--white); }
-.menu .social a:hover { color: var(--white-soft); }
 .menu__copy { margin-top: var(--s-1); font-family: var(--font-ui); font-size: var(--ui-sm); color: var(--white-soft); }
 
 body.menu-open { overflow: hidden; }
@@ -158,12 +170,15 @@ body.menu-open { overflow: hidden; }
   padding: 18px 34px;
   font-size: var(--ui-md); line-height: 1;
   text-decoration: none;
-  transition: background-color .3s, color .3s;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 .pill--sm { padding: 13px 26px; }
-.pill:hover, .pill:focus-visible,
-.card:hover .pill, .card:focus-visible .pill { background: var(--white-soft); color: var(--ink); }
-.pill .arrow { font-size: 1.3em; line-height: 0; }
+.pill svg { transition: transform var(--dur) var(--ease); }
+.pill svg { width: 1.25em; height: 1.25em; flex: none; fill: currentColor; }
+/* Roboto Condensed capitals sit ~6% of the font size above the middle of their line box;
+   lift icons beside uppercase text by the same amount so they centre on the letters */
+.pill svg, .shot__caption svg { translate: 0 -.0625em; }
 
 /* --------------------------------------------------------------------------
    Hero (home)
@@ -213,18 +228,23 @@ body.menu-open { overflow: hidden; }
   box-shadow: var(--shadow-lg);
   color: var(--white); text-decoration: none;
   background: var(--placeholder-dark);
+  transition: transform var(--dur-slow) var(--ease), box-shadow var(--dur-slow) var(--ease);
 }
 .card__img {
   position: absolute; inset: -6px; z-index: -1;
   width: calc(100% + 12px); height: calc(100% + 12px); max-width: none;
   object-fit: cover;
   filter: brightness(60%) saturate(0%) blur(2px);
-  transition: filter .2s;
+  transition: filter var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
 }
-.card:hover .card__img, .card:focus-visible .card__img { filter: brightness(100%) saturate(100%) blur(0); }
-/* Touch screens can't hover: show the photo in colour, darkened enough to keep the text readable */
+/* Dark gradient behind the text so it stays readable over any photo, including the full-brightness hover state */
+.card::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.55) 50%, rgba(0,0,0,0) 85%);
+}
+/* Touch screens can't hover: show the photo in colour; the gradient below keeps the text readable */
 @media (hover: none) {
-  .card__img, .card:hover .card__img { filter: brightness(62%); }
+  .card__img { filter: none; }
 }
 .card__label { display: block; font-size: var(--ui-sm); line-height: 1.3; }
 .card__title { display: block; font-family: var(--font-display); font-weight: 700; font-size: 2rem; line-height: 1.2; margin-top: 6px; }
@@ -242,6 +262,34 @@ body.menu-open { overflow: hidden; }
 
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-2); padding-bottom: var(--s-4); }
 .grid .card { min-height: 420px; padding: 40px; }
+
+/* --------------------------------------------------------------------------
+   Software (home): own products, as light text cards
+   -------------------------------------------------------------------------- */
+/* Solid background so the sticky, faded hero doesn't show through; the top fades in from the card list */
+.software {
+  position: relative; z-index: 1;
+  padding-block: var(--s-3) var(--s-4);
+  background: linear-gradient(to bottom, rgba(248,248,248,0), var(--bg) var(--s-3));
+}
+.section-head__title {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: .95; color: var(--ink); margin-top: 10px;
+}
+.section-head p { margin-top: var(--s-1); max-width: 55ch; }
+
+.apps { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-2); margin-top: var(--s-2); }
+.app {
+  display: flex; flex-direction: column;
+  background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-md);
+}
+.app__body { flex: 1; display: flex; flex-direction: column; padding: var(--s-2); }
+.app__icon { width: 64px; height: 64px; margin-bottom: var(--s-1); }
+.app__label { font-size: var(--ui-sm); line-height: 1.3; color: var(--pink); }
+.app__title { font-family: var(--font-display); font-weight: 700; font-size: 2rem; line-height: 1.2; color: var(--ink); margin-top: 6px; }
+.app__text { margin-top: 14px; }
+.app__stack { margin-top: 12px; font-family: var(--font-ui); font-size: var(--ui-sm); color: var(--text-soft); }
+.app__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: auto; padding-top: var(--s-2); }
 
 /* --------------------------------------------------------------------------
    About
@@ -269,10 +317,9 @@ body.menu-open { overflow: hidden; }
   width: 96px; height: 96px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: var(--white); color: var(--pink); box-shadow: var(--shadow-lg);
-  transition: transform .2s, background-color .3s, color .3s;
+  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .play-btn svg { width: 44px; height: 44px; margin-left: 6px; fill: currentColor; }
-.play-btn:hover, .play-btn:focus-visible { transform: translate(-50%, -50%) scale(1.06); background: var(--white-soft); color: var(--ink); }
 .cs-hero--click.is-playing .play-btn { display: none; }
 
 .cs-intro { padding-block: var(--s-3) var(--s-2); }
@@ -307,15 +354,14 @@ body.menu-open { overflow: hidden; }
 .shot__frame {
   display: block; border-radius: var(--radius-sm); overflow: hidden; background: var(--placeholder);
   box-shadow: var(--shadow-md); aspect-ratio: var(--shot-ratio, 16 / 10);
+  transition: box-shadow var(--dur-slow) var(--ease);
 }
-.shot__frame img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform .4s; }
-.shot:hover .shot__frame img { transform: scale(1.03); }
+.shot__frame img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform var(--dur-slow) var(--ease); }
 .shot__caption {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px;
   font-size: var(--ui-sm); line-height: 1.3; color: var(--ink);
 }
-.shot__caption svg { width: 20px; height: 20px; flex: none; fill: var(--ink); transition: fill .3s; }
-.shot:hover .shot__caption svg { fill: var(--pink); }
+.shot__caption svg { width: 20px; height: 20px; flex: none; fill: var(--ink); transition: fill var(--dur) var(--ease), transform var(--dur) var(--ease); }
 
 .cs-back { padding-block: var(--s-2) var(--s-4); }
 
@@ -337,7 +383,7 @@ body.menu-open { overflow: hidden; }
 .lightbox__stage img, .lightbox__stage video { max-width: 100%; max-height: calc(100vh - 160px); width: auto; border-radius: var(--radius-sm); }
 .lightbox__caption { margin-top: 14px; color: var(--white); font-size: var(--ui-sm); }
 .lightbox button { position: absolute; color: var(--white); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; opacity: .8; }
-.lightbox button:hover { opacity: 1; }
+.lightbox button { transition: opacity var(--dur) var(--ease), scale var(--dur) var(--ease); }
 .lightbox button svg { width: 26px; height: 26px; fill: currentColor; }
 .lightbox__close { top: 12px; right: 12px; }
 .lightbox__prev { left: 10px; top: 50%; transform: translateY(-50%); }
@@ -351,6 +397,51 @@ body.menu-open { overflow: hidden; }
 .site-footer p { font-family: var(--font-ui); font-size: var(--ui-sm); color: var(--text-soft); }
 
 /* --------------------------------------------------------------------------
+   Interaction: hover (mouse only, so taps on phones never leave things stuck
+   mid-hover), keyboard focus (mirrors hover) and press
+   -------------------------------------------------------------------------- */
+@media (hover: hover) {
+  .logo:hover img { transform: rotate(-4deg) scale(1.04); }
+
+  .nav nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .social a:hover { color: var(--pink); }
+  .social a:hover svg { transform: translateY(-2px); }
+  .menu nav a:hover { color: var(--pink); transform: translateX(6px); }
+
+  .pill:hover, .card:hover .pill {
+    background: var(--pink); color: var(--white);
+    box-shadow: var(--shadow-pink); transform: translateY(-2px);
+  }
+  /* Arrows nudge the way they point */
+  .pill:hover .icon-right, .card:hover .icon-right { transform: translateX(4px); }
+  .pill:hover .icon-left { transform: translateX(-4px); }
+  .pill:hover .icon-down { transform: translateY(3px); }
+  .pill:hover .icon-external { transform: translate(2px, -2px); }
+
+  .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+  .card:hover .card__img { filter: brightness(100%) saturate(100%) blur(0); transform: scale(1.04); }
+
+  .shot:hover .shot__frame { box-shadow: var(--shadow-lg); }
+  .shot:hover .shot__frame img { transform: scale(1.04); }
+  .shot:hover .shot__caption svg { fill: var(--pink); transform: scale(1.15); }
+
+  .play-btn:hover { transform: translate(-50%, -50%) scale(1.08); background: var(--pink); color: var(--white); }
+  .lightbox button:hover { opacity: 1; scale: 1.12; }
+}
+
+/* Keyboard focus gets the same colour changes, without movement so the focus ring stays put */
+.nav nav a:focus-visible::after { transform: scaleX(1); }
+.social a:focus-visible { color: var(--pink); }
+.pill:focus-visible, .card:focus-visible .pill { background: var(--pink); color: var(--white); }
+.card:focus-visible .card__img { filter: brightness(100%) saturate(100%) blur(0); }
+.shot:focus-visible .shot__caption svg { fill: var(--pink); }
+.play-btn:focus-visible { background: var(--pink); color: var(--white); }
+
+/* Press */
+.pill:active, .card:active .pill { transform: translateY(0) scale(.97); box-shadow: var(--shadow-sm); }
+.card:active { transform: translateY(-2px); }
+
+/* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
@@ -361,6 +452,8 @@ body.menu-open { overflow: hidden; }
   .hero__portrait { display: none; }
   .hero { min-height: auto; }
   .card { min-height: 480px; }
+  /* Text can fill most of a shorter card, so the gradient never fades below .55 */
+  .card::after { background: linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.55) 50%); }
   .grid, .gallery { gap: var(--s-1); }
   .about__section { grid-template-columns: 1fr; gap: 20px; }
 }
@@ -382,6 +475,10 @@ body.menu-open { overflow: hidden; }
   .card__title { font-size: 1.6rem; }
   .grid { grid-template-columns: 1fr; gap: var(--s-2); }
   .grid .card { min-height: 300px; padding: 30px; }
+  .apps { grid-template-columns: 1fr; }
+  .app .pill { padding-block: 15px; } /* standalone links: keep a 44px tap target */
+  .app__title { font-size: 1.6rem; }
+  .app__icon { width: 56px; height: 56px; }
   .cs-meta { grid-template-columns: 1fr; gap: var(--s-2); }
   .gallery, .gallery--3 { grid-template-columns: 1fr; gap: var(--s-2); }
   .gallery--photos { grid-template-columns: repeat(2, 1fr); gap: var(--s-1); }
@@ -396,4 +493,8 @@ body.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0s !important; }
+  /* Keep the colour changes, drop the movement */
+  .logo:hover img, .social a:hover svg, .menu nav a:hover,
+  .pill:hover, .card:hover .pill, .pill:hover [class^="icon-"], .card:hover [class^="icon-"], .pill:active, .card:active .pill,
+  .card:hover, .card:active, .card:hover .card__img, .shot:hover .shot__frame img, .shot:hover .shot__caption svg { transform: none; }
 }
